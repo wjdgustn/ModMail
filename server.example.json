@@ -1,11 +1,6 @@
 {
   "guild": "",
   "channel": {
-    "ticket": "",
-    "security": "",
-    "violations": ""
-  },
-  "emoji": {
-    "kick": ""
+    "ticket": ""
   }
 }

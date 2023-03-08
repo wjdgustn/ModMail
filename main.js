@@ -4,8 +4,7 @@ const {
     EmbedBuilder,
     GatewayIntentBits,
     Partials,
-    InteractionType,
-    ActivityType
+    InteractionType
 } = require('discord.js');
 const fs = require('fs');
 const {
@@ -33,7 +32,6 @@ const TicketMessage = require('./schemas/ticketMessage');
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.MessageContent
@@ -194,8 +192,7 @@ const registerCommands = async () => {
 
 const cacheServer = async () => {
     console.log('cache start');
-    const guild = await client.guilds.cache.get(Server.guild);
-    ServerCache.guild = guild;
+    ServerCache.guild = await client.guilds.cache.get(Server.guild);
     console.log('guild cached');
     // for(let r in Server.role)
     //     ServerCache.role[r] = await ServerCache.adofai_gg.roles.fetch(Server.role[r]);
@@ -203,9 +200,9 @@ const cacheServer = async () => {
     for(let c in Server.channel)
         ServerCache.channel[c] = await client.channels.fetch(Server.channel[c]);
     console.log('channel cached');
-    for(let e in Server.emoji)
-        ServerCache.emoji[e] = client.emojis.cache.get(Server.emoji[e]) || await guild.emojis.fetch(Server.emoji[e]);
-    console.log('emoji cached');
+    // for(let e in Server.emoji)
+    //     ServerCache.emoji[e] = client.emojis.cache.get(Server.emoji[e]) || await guild.emojis.fetch(Server.emoji[e]);
+    // console.log('emoji cached');
 
     console.log('cache finish');
 }
@@ -240,10 +237,6 @@ client.once('ready', async () => {
     if(debug) client.guilds.cache.get(process.argv[3] || Server.guild).commands.fetch();
     registerCommands();
     loadHandler();
-
-    client.user.setActivity('DM me to send a message to MOD TEAM', {
-        type: ActivityType.Watching
-    });
 });
 
 client.on('interactionCreate', async interaction => {

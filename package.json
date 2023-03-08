@@ -1,5 +1,5 @@
 {
-  "name": "ottomod",
+  "name": "modmail",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -8,19 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wjdgustn/OttoMod.git"
+    "url": "git+https://github.com/wjdgustn/ModMail.git"
   },
   "author": "HYONSU",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/wjdgustn/OttoMod/issues"
+    "url": "https://github.com/wjdgustn/ModMail/issues"
   },
-  "homepage": "https://github.com/wjdgustn/OttoMod#readme",
+  "homepage": "https://github.com/wjdgustn/ModMail#readme",
   "dependencies": {
     "await-modal-submit": "^1.0.3",
-    "discord.js": "^14.6.0",
+    "discord.js": "^14.7.1",
     "jejudo": "^0.1.5",
-    "mongoose": "^6.6.1"
+    "mongoose": "^6.10.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
