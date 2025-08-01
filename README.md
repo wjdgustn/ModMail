@@ -14,4 +14,5 @@ services:
 
       GUILD_ID: guild_id
       TICKET_CHANNEL_ID: forum_channel_id
+      DISABLE_ANONYMOUS_TICKET: false
 ```
