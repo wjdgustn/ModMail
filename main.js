@@ -192,8 +192,8 @@ const registerCommands = async () => {
 
 const cacheServer = async () => {
     console.log('cache start');
-    ServerCache.guild = await client.guilds.cache.get(process.env.GUILD_ID);
-    console.log('guild cached');
+    // ServerCache.guild = await client.guilds.cache.get(process.env.GUILD_ID);
+    // console.log('guild cached');
     // for(let r in Server.role)
     //     ServerCache.role[r] = await ServerCache.adofai_gg.roles.fetch(Server.role[r]);
     // console.log('role cached');
