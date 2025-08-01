@@ -1,7 +1,7 @@
 ```yaml
 services:
   app:
-    image: ghcr.io/wjdgustn/ModMail:master
+    image: ghcr.io/wjdgustn/ModMail:main
     environment:
       TOKEN: BOT_TOKEN
       MONGODB_HOST: host.docker.internal
