@@ -2,12 +2,10 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 
-const setting = require('../setting.json');
-
 module.exports = () => {
     const connect = () => {
-        mongoose.connect(`mongodb://${setting.MONGODB_USER}:${setting.MONGODB_PASSWORD}@${setting.MONGODB_HOST}:${setting.MONGODB_PORT}/admin`, {
-            dbName: setting.DBNAME
+        mongoose.connect(`mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/admin`, {
+            dbName: process.env.DBNAME
         }, e => {
             if(e) console.error(e);
             else console.log(`MongoDB connected.`);

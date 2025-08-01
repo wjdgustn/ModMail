@@ -11,7 +11,6 @@ const querystring = require('querystring');
 const fs = require('fs');
 
 const main = require('./main');
-const Server = require('./server.json');
 
 let client;
 
@@ -378,7 +377,7 @@ module.exports.errorEmbed = (memeber, description) => defaultUserEmbed(memeber, 
 });
 
 module.exports.getCommandMention = (commandName, subCommand) => {
-    const commands = client.guilds.cache.get(process.argv[3] || Server.guild).commands.cache;
+    const commands = client.guilds.cache.get(process.argv[3] || process.env.GUILD_ID).commands.cache;
     const command = commands.find(c => c.name === commandName);
 
     if(!command) return null;

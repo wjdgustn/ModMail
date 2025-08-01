@@ -19,7 +19,8 @@
   "dependencies": {
     "await-modal-submit": "^1.0.3",
     "discord.js": "^14.7.1",
-    "jejudo": "^0.1.5",
+    "dotenv": "^17.2.1",
+    "jejudo": "^0.2.0",
     "mongoose": "^6.10.2"
   },
   "devDependencies": {

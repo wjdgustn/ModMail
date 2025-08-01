@@ -18,8 +18,8 @@ const path = require('path');
 const util = require('util');
 const awaitModalSubmit = require('await-modal-submit');
 
-const setting = require('./setting.json');
-const Server = require('./server.json');
+require('dotenv').config();
+
 const utils = require('./utils');
 const lang = require('./lang');
 
@@ -115,10 +115,10 @@ const loadJejudo = () => {
         owners: ownerID,
         registerDefaultCommands: false,
         secrets: [
-            setting.MONGODB_HOST,
-            setting.MONGODB_PORT,
-            setting.MONGODB_USER,
-            setting.MONGODB_PASSWORD
+            process.env.MONGODB_HOST,
+            process.env.MONGODB_PORT,
+            process.env.MONGODB_USER,
+            process.env.MONGODB_PASSWORD
         ],
         globalVariables,
         noPermission: i => {
@@ -192,13 +192,12 @@ const registerCommands = async () => {
 
 const cacheServer = async () => {
     console.log('cache start');
-    ServerCache.guild = await client.guilds.cache.get(Server.guild);
+    ServerCache.guild = await client.guilds.cache.get(process.env.GUILD_ID);
     console.log('guild cached');
     // for(let r in Server.role)
     //     ServerCache.role[r] = await ServerCache.adofai_gg.roles.fetch(Server.role[r]);
     // console.log('role cached');
-    for(let c in Server.channel)
-        ServerCache.channel[c] = await client.channels.fetch(Server.channel[c]);
+    ServerCache.channel.ticket = await client.channels.fetch(process.env.TICKET_CHANNEL_ID);
     console.log('channel cached');
     // for(let e in Server.emoji)
     //     ServerCache.emoji[e] = client.emojis.cache.get(Server.emoji[e]) || await guild.emojis.fetch(Server.emoji[e]);
@@ -234,7 +233,7 @@ client.once('ready', async () => {
     // loadSelectHandler();
     loadButtonHandler();
     cacheServer();
-    if(debug) client.guilds.cache.get(process.argv[3] || Server.guild).commands.fetch();
+    if(debug) client.guilds.cache.get(process.argv[3] || process.env.GUILD_ID).commands.fetch();
     registerCommands();
     loadHandler();
 });
@@ -399,4 +398,4 @@ process.on('uncaughtException', async e => {
     }
 });
 
-client.login(setting.TOKEN);
+client.login(process.env.TOKEN);
