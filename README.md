@@ -2,6 +2,7 @@
 services:
   app:
     image: ghcr.io/wjdgustn/modmail:main
+    restart: unless-stopped
     extra_hosts:
       - host.docker.internal:host-gateway
     labels:
