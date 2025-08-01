@@ -4,6 +4,8 @@ services:
     image: ghcr.io/wjdgustn/modmail:main
     extra_hosts:
       - host.docker.internal:host-gateway
+    labels:
+      com.centurylinklabs.watchtower.enable: true
     environment:
       TOKEN: BOT_TOKEN
       MONGODB_HOST: host.docker.internal
