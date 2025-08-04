@@ -4,13 +4,16 @@ const {
     ActionRowBuilder,
     ButtonBuilder,
     ButtonStyle,
-    SelectMenuBuilder
+    SelectMenuBuilder,
+    ThreadAutoArchiveDuration
 } = require('discord.js');
 const Url = require('url');
 const querystring = require('querystring');
 const fs = require('fs');
 
 const main = require('./main');
+
+const Ticket = require('./schemas/ticket');
 
 let client;
 
@@ -390,4 +393,59 @@ module.exports.sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 module.exports.getAllUrlInString = str => {
     const regex = /(https?:\/\/\S+)/g;
     return str.match(regex) || [];
+}
+
+module.exports.createTicketChannel = async (user, title, anonymous = false) => {
+    const buttonComponents = [
+        new ButtonBuilder()
+            .setCustomId('ticketAction_close')
+            .setLabel('Close Ticket')
+            .setStyle(ButtonStyle.Danger)
+            .setEmoji('🚪'),
+        new ButtonBuilder()
+            .setCustomId('ticketAction_reminder_disable')
+            .setLabel('Disable Reminder')
+            .setStyle(ButtonStyle.Danger)
+            .setEmoji('⏰')
+    ];
+    if(!anonymous) buttonComponents.unshift(new ButtonBuilder()
+        .setURL(`discord://-/users/${user.id}`)
+        .setLabel('User Profile')
+        .setStyle(ButtonStyle.Link)
+        .setEmoji('🔗'));
+
+    const channel = await main.Server.channel.ticket.threads.create({
+        name: `${anonymous ? 'Anonymous' : user.tag} - ${title}`,
+        autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
+        message: {
+            embeds: [
+                new EmbedBuilder()
+                    .setColor(0x349eeb)
+                    .setTitle('Ticket Information')
+                    .addFields([
+                        {
+                            name: 'User',
+                            value: `${anonymous ? 'Anonymous User' : `${user} (${user.id})`}`
+                        }
+                    ])
+            ],
+            components: [
+                new ActionRowBuilder()
+                    .addComponents(buttonComponents)
+            ]
+        },
+        reason: `${client.user.username} ticket thread`
+    });
+
+    const ticket = new Ticket({
+        user: user.id,
+        channel: channel.id,
+        anonymous
+    });
+    await ticket.save();
+
+    return {
+        channel,
+        ticket
+    }
 }

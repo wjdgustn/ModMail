@@ -1,11 +1,7 @@
 const {
     ChannelType,
-    EmbedBuilder,
     ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle,
     SelectMenuBuilder,
-    ThreadAutoArchiveDuration,
     ModalBuilder,
     TextInputBuilder,
     TextInputStyle
@@ -74,7 +70,6 @@ module.exports = client => {
                 moderatorReplied: false
             });
 
-            let channel;
             let ticketContent = message.content;
 
             if(!ticket) {
@@ -167,53 +162,8 @@ module.exports = client => {
                 });
                 if(checkTicket) return;
 
-                const buttonComponents = [
-                    new ButtonBuilder()
-                        .setCustomId('ticketAction_close')
-                        .setLabel('Close Ticket')
-                        .setStyle(ButtonStyle.Danger)
-                        .setEmoji('🚪'),
-                    new ButtonBuilder()
-                        .setCustomId('ticketAction_reminder_disable')
-                        .setLabel('Disable Reminder')
-                        .setStyle(ButtonStyle.Danger)
-                        .setEmoji('⏰')
-                ];
-                if(!anonymous) buttonComponents.unshift(new ButtonBuilder()
-                    .setURL(`discord://-/users/${message.author.id}`)
-                    .setLabel('User Profile')
-                    .setStyle(ButtonStyle.Link)
-                    .setEmoji('🔗'));
-
-                channel = await forum.threads.create({
-                    name: `${anonymous ? anonymousProfile.username : message.author.tag} - ${title}`,
-                    autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
-                    message: {
-                        embeds: [
-                            new EmbedBuilder()
-                                .setColor(0x349eeb)
-                                .setTitle('Ticket Information')
-                                .addFields([
-                                    {
-                                        name: 'User',
-                                        value: `${anonymous ? 'Anonymous User' : `${message.author} (${message.author.id})`}`
-                                    }
-                                ])
-                        ],
-                        components: [
-                            new ActionRowBuilder()
-                                .addComponents(buttonComponents)
-                        ]
-                    },
-                    reason: `${client.user.username} ticket thread`
-                });
-
-                ticket = new Ticket({
-                    user: message.author.id,
-                    channel: channel.id,
-                    anonymous
-                });
-                await ticket.save();
+                const createTicket = await utils.createTicketChannel(message.author, title, anonymous);
+                ticket = createTicket.ticket;
 
                 await modalResponse.update({
                     content: str('CREATE_NEW_TICKET_SUCCESS'),

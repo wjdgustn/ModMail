@@ -26,6 +26,13 @@
   "COMMAND_RELOAD_BUTTON_DESCRIPTION": "버튼 핸들러를 다시 불러옵니다.",
   "COMMAND_RELOAD_HANDLER_DESCRIPTION": "기타 이벤트 핸들러를 다시 불러옵니다.",
 
+  "COMMAND_CREATETICKET_DESCRIPTION": "특정 유저를 대상으로 하는 티켓을 생성합니다.",
+  "COMMAND_CREATETICKET_TARGETUSER_DESCRIPTION": "티켓을 생성할 대상 유저입니다.",
+  "COMMAND_CREATETICKET_TITLE_DESCRIPTION": "티켓의 제목입니다.",
+
+  "CREATETICKET_ALREADY_EXISTS": "해당 유저의 티켓이 이미 존재합니다.",
+  "CREATETICKET_FROM_MOD_DM": "관리자가 \"{title}\" 티켓을 생성하였습니다.",
+
   "CREATE_NEW_TICKET_MESSAGE": "아래에서 생성할 티켓의 종류를 선택하세요.",
   "PUBLIC_TICKET": "공개 티켓",
   "PUBLIC_TICKET_DESCRIPTION": "관리자에게 내 프로필 정보를 공개합니다.",
