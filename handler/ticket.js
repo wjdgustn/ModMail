@@ -246,25 +246,68 @@ module.exports = client => {
     });
 
     client.on('messageUpdate', async (oldMessage, newMessage) => {
-        if(newMessage.channel.type !== ChannelType.DM) return;
+        if(newMessage.author.bot) return;
 
-        const dbMessage = await TicketMessage.findOne({
-            dmMessage: newMessage.id
-        });
-        if(!dbMessage) return;
+        if(newMessage.channel.type === ChannelType.DM) {
+            const dbMessage = await TicketMessage.findOne({
+                dmMessage: newMessage.id
+            });
+            if(!dbMessage) return;
 
-        let ticketChannel;
-        let ticketMessage;
-        let messageWebhook;
-        try {
-            ticketChannel = await client.channels.fetch(dbMessage.ticketThread);
-            ticketMessage = await ticketChannel.messages.fetch(dbMessage.webhookMessage);
-            messageWebhook = await ticketMessage.fetchWebhook();
-        } catch(e) {}
+            let ticketChannel;
+            let ticketMessage;
+            let messageWebhook;
+            try {
+                ticketChannel = await client.channels.fetch(dbMessage.ticketThread);
+                ticketMessage = await ticketChannel.messages.fetch(dbMessage.webhookMessage);
+                messageWebhook = await ticketMessage.fetchWebhook();
+            } catch(e) {}
 
-        return messageWebhook.editMessage(ticketMessage, {
-            content: newMessage.content,
-            threadId: ticketChannel.id
-        });
+            return messageWebhook.editMessage(ticketMessage, {
+                content: newMessage.content,
+                threadId: ticketChannel.id
+            });
+        }
+        else if(newMessage.channel.type === ChannelType.PublicThread) {
+            const ticket = await Ticket.findOne({
+                channel: newMessage.channel.id
+            });
+            if(!ticket) return;
+
+            const dbMessage = await TicketMessage.findOne({
+                webhookMessage: newMessage.id
+            });
+            if(!dbMessage) return;
+
+            let ticketUser;
+            try {
+                ticketUser = await newMessage.client.users.fetch(ticket.user);
+            } catch(e) {
+                return Ticket.deleteOne({
+                    channel: newMessage.channel.id
+                });
+            }
+
+            let dmMessage;
+            try {
+                const dmChannel = await ticketUser.createDM();
+                dmMessage = await dmChannel.messages.fetch(dbMessage.dmMessage);
+            } catch(e) {
+                return;
+            }
+
+            const bot_mentions = [
+                `<@${newMessage.client.user.id}>`,
+                `<@!${newMessage.client.user.id}>`
+            ];
+            const bot_mentions_regex = bot_mentions.map(a => new RegExp(utils.escapeRegExp(a)));
+
+            let content = newMessage.content;
+            for(let r of bot_mentions_regex) content = content.replace(r, '');
+
+            return dmMessage.edit({
+                content
+            });
+        }
     });
 }
