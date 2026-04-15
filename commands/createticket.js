@@ -31,7 +31,7 @@ module.exports = {
     },
     checkPermission: async interaction => {
         const forum = Server.channel.ticket;
-        return utils.permissionChecker(interaction => forum.permissionsFor(interaction.member).has(Flags.SendMessages), '티켓')(interaction);
+        return utils.permissionChecker(interaction => forum.permissionsFor(interaction.member).has(Flags.SendMessagesInThreads), '티켓')(interaction);
     },
     handler: async interaction => {
         await interaction.deferReply({
